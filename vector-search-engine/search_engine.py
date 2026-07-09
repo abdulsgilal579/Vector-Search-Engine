@@ -12,7 +12,7 @@ class SemanticSearchEngine:
         self.text.extend(text)
         self.vector.extend(vectors)
     
-    def semenaticSearch(self, query, limit = 5):
+    def semantic_search(self, query, limit=5):
         query_vector = self.embedder.encode([query])[0]
         score = np.dot(self.vector, query_vector)
         top_results = np.argsort(score)[::-1][:limit]
