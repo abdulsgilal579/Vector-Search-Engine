@@ -1,11 +1,12 @@
 import os
-from groq import Groq
 from dotenv import load_dotenv
+from groq import Groq
 
 load_dotenv()
 
 client = Groq(api_key=os.environ["GROQ_API_KEY"])
 MODEL = "llama-3.3-70b-versatile"
+
 
 def ask_llm(question, context):
     prompt = (
@@ -17,6 +18,6 @@ def ask_llm(question, context):
     response = client.chat.completions.create(
         model=MODEL,
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.2
+        temperature=0.2,
     )
     return response.choices[0].message.content

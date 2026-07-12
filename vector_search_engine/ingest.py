@@ -6,8 +6,8 @@ def ingest_pdf(pdf_path, store, embedder):
     all_texts = []
     all_metadata = []
     for page_num, text in pages:
-        chunks = chunk_text(text)
-        for idx, chunk in enumerate(chunks):
+        text_chunks = chunk_text(text)
+        for idx, chunk in enumerate(text_chunks):
             all_texts.append(chunk)
             all_metadata.append({
                 "source": pdf_path,
@@ -17,3 +17,7 @@ def ingest_pdf(pdf_path, store, embedder):
     vectors = embedder.encode(all_texts)
     store.addDocument(all_texts, vectors, all_metadata)
     return len(all_texts)
+
+
+# Backward-compatible alias
+ingest = ingest_pdf
