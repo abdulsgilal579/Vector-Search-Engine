@@ -1,26 +1,23 @@
-from pdf_loader import pdf_loader, chunks
-from pprint import pprint
+from .pdf_loader import load_pdf, chunk_text
 
-def ingest(pdf_path, store, embedding):
-    data = pdf_loader(pdf_path)
-    all_text = []
-    all_metadatas = []
-    for page_number, text in data:
-        text_chunks = chunks(text)
-        for index, chunk in enumerate(text_chunks):
-            all_text.append(chunk)
-            all_metadatas.append({
+
+def ingest_pdf(pdf_path, store, embedder):
+    pages = load_pdf(pdf_path)
+    all_texts = []
+    all_metadata = []
+    for page_num, text in pages:
+        text_chunks = chunk_text(text)
+        for idx, chunk in enumerate(text_chunks):
+            all_texts.append(chunk)
+            all_metadata.append({
                 "source": pdf_path,
-                "page_number": page_number,
-                "index": index
+                "page": page_num,
+                "chunk_index": idx,
             })
-    vector = embedding.encode(all_text)
-    store.addDocument(all_text, vector, all_metadatas)
-    return len(all_text)
+    vectors = embedder.encode(all_texts)
+    store.addDocument(all_texts, vectors, all_metadata)
+    return len(all_texts)
 
 
-if __name__ == "__main__":
-    PDF_PATH = "/Users/abdulsamadgilal/Development/Vector-Search-Engine/vector-search-youtube/pdfs/Abdul_Samad_Gilal.pdf"
-    data = ingest(pdf_path=PDF_PATH)
-    pprint(data)
-
+# Backward-compatible alias
+ingest = ingest_pdf
