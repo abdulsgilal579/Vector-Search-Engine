@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
-from vector_store import VectorStore
-from embeddings import Embedding
-from ingest import ingest
-from llm import ask_llm
+from vector_search_engine.vector_store import VectorStore
+from vector_search_engine.embeddings import Embedding
+from vector_search_engine.ingest import ingest
+from vector_search_engine.llm import ask_llm
 
 app = FastAPI()
 
@@ -12,7 +12,7 @@ embedder = Embedding()
 
 @app.post("/ingest")
 def ingest_pdf(file_path):
-    count = ingest(pdf_path=file_path, store=store, embedding=embedder)
+    count = ingest(pdf_path=file_path, store=store, embedder=embedder)
     return {"Response:": "Ok", "Count: ": count, "Source": file_path}
 
 @app.get("/pdf_search")
